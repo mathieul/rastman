@@ -1,0 +1,54 @@
+# = Rastman is a Ruby interface for the Asterisk Manager API
+#
+# When creating a new Rastman::Manager instance, it connects to an Asterisk server
+# on the manager port (<tt>5038</tt> by default), sends a login request
+# and listens to events published by the server. The instance can also
+# be used to send Manager API requests to the server.
+#
+# All the Asterisk Manager API commands are accessible. They can be used in two
+# different ways:
+#
+# - name of the command in lowercase: the command is sent but Rastman doesn't wait
+#   for the answer (asynchronous).
+#   i.e.: rastman.setvar :variable => "my_time", :value => "12"
+#
+# - name of the command in lowercase with a bang: the command is sent and Rastman
+#   waits for the answer (synchronous). If the answer contains a value (for Getvar)
+#   then it is returned, else true is returned.
+#   i.e.: value = rastman.getvar! 1, :variable => "extension"
+#
+# == Source
+#
+# You can access the source repository using Git version control system
+# (http://git.or.cz). The Git repository for rastman is hosted at GitHub:
+# git://github.com/mathieul/rastman.git
+#
+# == Download
+#
+# You can download Rastman from the Rubyforge project page: http://rubyforge.org/projects/rastman
+#
+# == Example
+# 
+#     require "rubygems"
+#     require "rastman"
+#     
+#     rastman = Rastman::Manager.new("myuser", "secret")
+#     
+#     rastman.add_event_hook(:event) { |evt| puts "Event received: [#{evt.inspect}]"
+#     
+#     rastman.connect
+#     
+#     rastman.events(:eventmask => "user,call")
+#     
+#     rastman.ping!
+#     
+#     rastman.originate :channel => "SIP/myphone@mydomain.com",
+#	                :context => "default", :exten => "voicemail",
+#	                :priority => 1
+#
+#     response_timeout = 1
+#     value = rastman.getvar! response_timeout, :channel => "SIP/5060-44d225d0",
+#                 :variable => "extension"
+#     
+#     rastman.logoff
+#
