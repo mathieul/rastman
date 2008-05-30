@@ -1,0 +1,21 @@
+*0.1.6* (May 30th, 2008)
+
+* fix that getvar! doesn't return the variable value (thanks to Andrius Kairiukstis for reporting the bug)
+
+* added information to README regarding the banged and not banged version of the commands
+
+*0.1.5* (February 8th, 2008)
+
+* fix the return value of ping! so it returns true in case of success [Franz Schwartau]
+
+* add the getvar and getvar! commands [Franz Schwartau]
+
+* allow to pass multiple variables to originate using a Hash [Franz Schwartau]
+  i.e.: rastman.originate([...], :variable => {"var1" => "val1", "var2" => "val2"})
+
+
+*0.1.4* (June 28th, 2007)
+
+* make it work for Asterisk 1.0.x
+
+* fix a problem when the event content contains multi-lines
