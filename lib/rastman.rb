@@ -87,7 +87,7 @@ module Rastman
 
     COMMANDS = [:login, :logoff, :events, :originate, :originate!, :redirect,
       :redirect!, :hangup, :hangup!, :ping, :ping!, :setvar, :setvar!,
-      :command, :command!, :getvar, :getvar!]
+      :command, :command!, :getvar!]
     WAIT_FOR_ANSWER = 0.1
 
     # Returns a Rastman::Manager object. The login and pwd parameters

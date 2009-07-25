@@ -151,13 +151,57 @@ describe "When connected to Asterisk, a rastman instance" do
     @asterisk.disconnect
   end
   
-  it "should have getvar! return true when the command is successful" do
+  it "should have getvar! return the value when the command is successful" do
     action = { :response => "Success", :actionid => "123", :value => "17065551419" }
     Thread.new { wait_a_bit; MockAsterisk.send_event(action) }
     @asterisk.getvar!(1, :channel => "SIP/5060-44d225d0",
                          :variable => "extension",
                          :actionid => "123").should == "17065551419"
     @asterisk.disconnect
+  end
+  
+  it "should have getvar! return the value when the response is received after another event" do
+    action =    { :event => "Newcallerid", :privilege => "call,all",
+                  :timestamp => "1213361083.812935", :channel => "SIP/sns-gk1-086cf000",
+                  :callerid => "180012345", :calleridname => "<Unknown>",
+                  :uniqueid => "1213361083.37",
+                  :"cid-callingpres" => "0 (Presentation Allowed, Not Screened)"}
+    response =  { :response => "Success", :variable => "ORIGINATE_UNIQUE_ID",
+                  :value => "2af9636b4baa326d835d24de8d440XXX",
+                  :actionid => "getvar-68564510" }
+    Thread.new do
+      wait_a_bit; MockAsterisk.send_event(action)
+      wait_a_bit; MockAsterisk.send_event(response)
+    end
+    result = @asterisk.getvar!(1,
+                        :channel=>"SIP/sns-gk1-086cf000",
+                        :variable=>"ORIGINATE_UNIQUE_ID",
+                        :actionid => "getvar-68564510")
+    result.should == "2af9636b4baa326d835d24de8d440XXX"
+    @asterisk.disconnect
+  end
+  
+  it "should allow to send a command within an event hook" do
+    action =    { :event => "Newcallerid", :privilege => "call,all",
+                  :timestamp => "1213361083.812935", :channel => "SIP/sns-gk1-086cf000",
+                  :callerid => "180012345", :calleridname => "<Unknown>",
+                  :uniqueid => "1213361083.37",
+                  :"cid-callingpres" => "0 (Presentation Allowed, Not Screened)"}
+    response =  { :response => "Success", :variable => "ORIGINATE_UNIQUE_ID",
+                  :value => "2af9636b4baa326d835d24de8d440YYY",
+                  :actionid => "getvar-68564510" }
+    @asterisk.add_event_hook(:event) do |evt|
+      Thread.new do
+        wait_a_bit; MockAsterisk.send_event(action)
+        wait_a_bit; MockAsterisk.send_event(response)
+      end
+      result = @asterisk.getvar!(1,
+                          :channel=> evt[:channel],
+                          :variable=>"ORIGINATE_UNIQUE_ID",
+                          :actionid => "getvar-68564510")
+      result.should == "2af9636b4baa326d835d24de8d440YYY"
+    end
+    MockAsterisk.send_event(action)
   end
   
   it "should have ping! return true when the command is successful" do
