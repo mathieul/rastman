@@ -246,6 +246,7 @@ describe "Events generated using the UserEvent command in Asterisk" do
   end
 
   it "should have the same format if they are sent from Asterisk V1.0.x or V1.4.x" do
+    pending
     evt_1_0 = {
       :event => "UserEventEvtStartScript",
       :variables => "PORT: SIP/10.1.2.98-b78008d8|ANI: lajoo|DNIS: 13002226666"
@@ -266,6 +267,7 @@ describe "Events generated using the UserEvent command in Asterisk" do
   end
   
   it "should set to empty string any empty event variable" do
+    pending
     evt_1_0 = {
       :event => "UserEventEvtStartScript",
       :variables => "PORT: SIP/10.1.2.98-b78008d8|ANI: lajoo|empty: |DNIS: 13002226666|entry:"
