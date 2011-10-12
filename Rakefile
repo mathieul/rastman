@@ -78,6 +78,7 @@ end
 desc "RCov"
 Spec::Rake::SpecTask.new("rcov") do |t|
   t.spec_files = FileList["specs/**/*_spec.rb"]
+  #t.spec_opts = ["--format", "specdoc", "-c"]
   t.rcov_opts = ['--exclude', 'specs\/']
   t.rcov = true
 end

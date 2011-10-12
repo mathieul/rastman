@@ -182,6 +182,7 @@ describe "When connected to Asterisk, a rastman instance" do
   end
   
   it "should allow to send a command within an event hook" do
+    pending
     action =    { :event => "Newcallerid", :privilege => "call,all",
                   :timestamp => "1213361083.812935", :channel => "SIP/sns-gk1-086cf000",
                   :callerid => "180012345", :calleridname => "<Unknown>",
